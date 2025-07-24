@@ -1,0 +1,175 @@
+{
+  "project": {
+    "name": "Groq RAG Chatbot API",
+    "description": "A high-performance, Retrieval-Augmented Generation (RAG) chatbot service that processes PDF, Word, and email documents, powered by Groq LLMs and providing a fast cURL-accessible API.",
+    "version": "1.0.0"
+  },
+  "stakeholders": {
+    "owner": "Client / Product Owner",
+    "developers": ["Backend Engineers", "ML Engineers"],
+    "architect": "Solutions Architect",
+    "end_users": ["Developers", "Integrators", "Automated Systems"]
+  },
+  "system_scope": {
+    "inputs": ["PDF files", "Word (.docx) files", "Email files (.eml, .msg)", "Text prompts via API"],
+    "outputs": ["Natural language responses via JSON API", "cURL-compatible endpoints", "Structured debug logs"],
+    "core_features": [
+      "Document parsing (PDF, Word, Email)",
+      "Text chunking and metadata enrichment",
+      "Embeddings generation",
+      "Vector similarity search",
+      "Groq-based LLM query generation",
+      "Async request handling",
+      "cURL API access",
+      "Response caching"
+    ]
+  },
+  "functional_requirements": {
+    "FR1": "The system shall accept PDF, DOCX, EML, and MSG files via HTTP POST requests.",
+    "FR2": "The system shall parse and extract text and metadata using Unstructured.io.",
+    "FR3": "The system shall chunk and embed document content using an async-compatible embedding model (Nomic Embed v1.5).",
+    "FR4": "The system shall store and retrieve chunks in Weaviate vector database using custom embeddings.",
+    "FR5": "The system shall accept natural language questions and retrieve relevant chunks using similarity search.",
+    "FR6": "The system shall construct a prompt with retrieved context and query the Groq Llama 3 70B model.",
+    "FR7": "The system shall return a JSON response with the LLM-generated answer.",
+    "FR8": "The system shall support async processing of embedding, retrieval, and LLM queries.",
+    "FR9": "The system shall cache query-response pairs in Redis for performance.",
+    "FR10": "The API shall support standard HTTP clients (e.g., cURL, Postman) and expose Swagger/OpenAPI documentation."
+  },
+  "non_functional_requirements": {
+    "NFR1": "The system shall return responses within 2 seconds for small to medium documents (<= 5MB).",
+    "NFR2": "The system shall support concurrent handling of at least 100 parallel requests.",
+    "NFR3": "The system shall be containerized and deployable via Docker Compose.",
+    "NFR4": "The system shall be secure against common web vulnerabilities (e.g., file upload sanitization).",
+    "NFR5": "The system shall log all API calls, error traces, and processing times."
+  },
+  "api_specification": {
+    "/query": {
+      "method": "POST",
+      "description": "Accepts a file and a natural language question, returns an answer based on document content.",
+      "request": {
+        "multipart/form-data": {
+          "file": "binary file (.pdf, .docx, .eml, .msg)",
+          "question": "string"
+        }
+      },
+      "response": {
+        "200": {
+          "answer": "string",
+          "source_chunks": ["string"],
+          "latency_ms": "integer"
+        },
+        "400": {
+          "error": "Invalid file format or missing question"
+        },
+        "500": {
+          "error": "Server error or Groq API failure"
+        }
+      }
+    }
+  },
+  "data_flow": {
+    "1": "Client sends a file and a question to /query endpoint.",
+    "2": "Server parses file using Unstructured and extracts clean text.",
+    "3": "Text is chunked and embedded asynchronously.",
+    "4": "Embeddings are stored and/or searched in Weaviate.",
+    "5": "Top-K similar chunks are retrieved.",
+    "6": "A prompt is constructed with the user's question + retrieved context.",
+    "7": "Prompt is sent to Groq's Llama 3 70B for completion.",
+    "8": "LLM response is returned to user via JSON."
+  },
+  "components": {
+    "file_parser": "Unstructured.io",
+    "chunker": "RecursiveCharacterTextSplitter from LangChain",
+    "embedder": "Nomic Embed v1.5",
+    "vector_db": "Weaviate (no auto embedding)",
+    "llm": "Groq Llama 3 70B (via groq Python SDK)",
+    "api": "FastAPI (async)",
+    "cache": "Redis (aioredis)",
+    "concurrency": "asyncio, httpx",
+    "deployment": "Docker, Docker Compose"
+  },
+  "performance": {
+    "expected_rps": 50,
+    "max_concurrent_requests": 100,
+    "document_size_limit_mb": 20,
+    "timeout_seconds": 15,
+    "answer_latency_target_ms": 1000
+  },
+  "scalability": {
+    "horizontal_scaling": true,
+    "stateless_services": ["API server", "Embedding service"],
+    "stateful_services": ["Weaviate", "Redis"]
+  },
+  "security": {
+    "file_upload_validation": true,
+    "rate_limiting": "optional - recommend slowapi or similar",
+    "authentication": "optional (API key support optional for production)",
+    "logging": "sensitive info redacted"
+  },
+  "monitoring": {
+    "logging": "Structured logs (uvicorn + custom)",
+    "tracing": "Optional: OpenTelemetry",
+    "metrics": "Optional: Prometheus + Grafana"
+  },
+  "testing": {
+    "unit_tests": "Coverage for all core components (parsing, chunking, embedding, retrieval)",
+    "integration_tests": "End-to-end tests for /query endpoint",
+    "performance_tests": "Load testing with locust or similar tool",
+    "security_tests": "Vulnerability scanning and penetration testing"
+  },
+  "deployment": {
+    "environment": "Docker Compose setup for local development and production",
+    "CI/CD": "GitHub Actions or similar for automated builds and tests",
+    "versioning": "Semantic versioning for API and components"
+  },
+  "documentation": {
+    "API_docs": "Swagger/OpenAPI documentation for /query endpoint",
+    "user_guide": "Basic usage guide for developers and integrators",
+    "developer_docs": "Technical documentation for system architecture and components"
+  },
+  "future_enhancements": {
+    "multi-language_support": "Support for additional languages in LLM queries",
+    "advanced_search_features": "Faceted search, filtering, and sorting of results",
+    "UI_dashboard": "Optional web interface for testing and monitoring"
+  },
+  "glossary": {
+    "RAG": "Retrieval-Augmented Generation",
+    "LLM": "Large Language Model",
+    "API": "Application Programming Interface",
+    "PDF": "Portable Document Format",
+    "DOCX": "Microsoft Word Open XML Document",
+    "EML": "Email Message Format",
+    "MSG": "Microsoft Outlook Email Message",
+    "Weaviate": "A vector database for storing and searching embeddings"
+  },
+  "references": {
+    "Unstructured.io": "https://unstructured.io",
+    "Nomic Embed": "https://nomic.ai/embed",
+    "Weaviate": "https://weaviate.io",
+    "Groq LLMs": "https://groq.com/llms",
+    "FastAPI": "https://fastapi.tiangolo.com",
+    "Redis": "https://redis.io",
+    "Docker": "https://www.docker.com"
+  },
+  "change_log": {
+    "v1.0.0": {
+      "date": "2023-10-01",
+      "changes": [
+        "Initial release of the Groq RAG Chatbot API SRS.",
+        "Defined core functional and non-functional requirements.",
+        "Specified API endpoints and data flow.",
+        "Outlined system architecture and components."
+      ]
+    }
+  },
+  "approval": {
+    "stakeholders": ["Client", "Developers", "Architect"],
+    "date": "2023-10-01",
+    "comments": "SRS approved for implementation phase."
+  },
+  "version": "1.0.0",
+  "status": "Approved",
+  "last_updated": "2023-10-01",
+  "notes": "This SRS document serves as a comprehensive guide for the development and deployment of the Groq RAG Chatbot API, ensuring all stakeholders have a clear understanding of the system's requirements and functionalities."
+}
