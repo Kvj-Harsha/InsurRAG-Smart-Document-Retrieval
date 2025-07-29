@@ -1,0 +1,31 @@
+"api_specification": {
+  "/hackrx/run": {
+    "method": "POST",
+    "description": "Main endpoint for HackRx. Accepts document URL and questions, returns answers.",
+    "authentication": "Required - Bearer Token (validated in header)",
+    "request": {
+      "application/json": {
+        "documents": "string (URL to .pdf/.docx)",
+        "questions": ["string", "string"]
+      }
+    },
+    "response": {
+      "200": {
+        "answers": ["string"],
+        "latency_ms": "integer"
+      },
+      "401": {
+        "error": "Unauthorized access"
+      },
+      "400": {
+        "error": "Invalid input or URL"
+      },
+      "500": {
+        "error": "Server error or LLM service failure"
+      }
+    },
+    "headers": {
+      "Authorization": "Bearer <api_key>"
+    }
+  }
+}

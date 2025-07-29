@@ -1,0 +1,1 @@
+# Tests HTTP endpoints using TestClient (FastAPI's test wrapper).
