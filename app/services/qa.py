@@ -1,7 +1,7 @@
 # app/services/qa.py
 
 from app.services.retriever import retriever
-from app.utils.llm_client import gemini  # Wrapper around Gemini 2.5 API
+from app.utils.llm_client import groq  # Wrapper around groq 2.5 API
 
 
 async def answer_query(query: str, top_k: int = 3, namespace: str = "default") -> str:
@@ -30,9 +30,9 @@ Question: {query}
 Answer:
 """
 
-    # Step 4: Call Gemini
+    # Step 4: Call groq
     try:
-        response = await gemini.ask(prompt)
+        response = await groq.ask(prompt)
         return response.strip()
     except Exception as e:
-        return f"❌ Error querying Gemini: {e}"
+        return f"❌ Error querying groq: {e}"
