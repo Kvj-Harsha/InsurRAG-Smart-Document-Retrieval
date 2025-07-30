@@ -36,9 +36,10 @@ class Config:
 
     # --- Weaviate Vector DB Settings ---
     WEAVIATE_URL: str = os.getenv("WEAVIATE_URL", "http://localhost:8080")
-    WEAVIATE_API_KEY: str = os.getenv("WEAVIATE_API_KEY", "") # For Weaviate Cloud or authenticated instances
-    WEAVIATE_COLLECTION_NAME: str = os.getenv("WEAVIATE_COLLECTION_NAME", "DocumentChunks")
-    WEAVIATE_BATCH_SIZE: int = int(os.getenv("WEAVIATE_BATCH_SIZE", "100"))
+    PINECONE_API_KEY: str = os.getenv("PINECONE_API_KEY", "pcsk_3oQZ3R_7gfF8EfnTNMVJ3vGMFDY2vi2B9aMcxvU4opDPH1KboDVq2N5d3BCpeMY8QJj5XK") # For Weaviate Cloud or authenticated instances
+    PINECONE_ENV: str = os.getenv("PINECONE_ENV", "us-east-1-aws")  # e.g. "gcp-starter"
+    PINECONE_INDEX_NAME: str = os.getenv("PINECONE_INDEX_NAME", "bajaj")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "AIzaSyCwjlNxRVLsTS0YgS1F5sEX2avWIDnT-mg")
 
     # --- Document Processing Settings ---
     MAX_DOCUMENT_SIZE_MB: int = int(os.getenv("MAX_DOCUMENT_SIZE_MB", "20"))
