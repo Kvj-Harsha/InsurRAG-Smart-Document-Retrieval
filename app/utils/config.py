@@ -32,13 +32,13 @@ class Config:
     # A Hugging Face API token might be required for Nomic Embed if used via Hugging Face Inference API
     # Alternatively, if self-hosting Nomic Embed, this might not be needed.
     NOMIC_EMBED_API_KEY: str = os.getenv("NOMIC_EMBED_API_KEY", "nk-GrvdvTgT7E-u7-886OZba0rJv2GffSzMpI5wZLgTNT0")
-    NOMIC_EMBED_DIMENSION: int = int(os.getenv("NOMIC_EMBED_DIMENSION", "768")) # Default dimension for Nomic Embed v1.5
+    NOMIC_EMBED_DIMENSION: int = int(os.getenv("NOMIC_EMBED_DIMENSION", "384")) # Default dimension for Nomic Embed v1.5
 
     # --- Weaviate Vector DB Settings ---
     WEAVIATE_URL: str = os.getenv("WEAVIATE_URL", "http://localhost:8080")
     PINECONE_API_KEY: str = os.getenv("PINECONE_API_KEY", "pcsk_3oQZ3R_7gfF8EfnTNMVJ3vGMFDY2vi2B9aMcxvU4opDPH1KboDVq2N5d3BCpeMY8QJj5XK") # For Weaviate Cloud or authenticated instances
     PINECONE_ENV: str = os.getenv("PINECONE_ENV", "us-east-1-aws")  # e.g. "gcp-starter"
-    PINECONE_INDEX_NAME: str = os.getenv("PINECONE_INDEX_NAME", "bajaj")
+    PINECONE_INDEX_NAME: str = os.getenv("PINECONE_INDEX_NAME", "newbajaj")
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "AIzaSyCwjlNxRVLsTS0YgS1F5sEX2avWIDnT-mg")
 
     # --- Document Processing Settings ---
